@@ -1,0 +1,8 @@
+printWidth: 80 # 打印宽度
+tabWidth: 4 # tab 空格数
+vueIndentScriptAndStyle: true # 缩进 vue script 和 style 下的内容（顶层）
+htmlWhitespaceSensitivity: "css" # HTML 空格敏感度
+semi: false # js / ts 语句末尾分号
+trailingComma: "all" # 尾随逗号
+bracketSameLine: false # 多行HTML的 > 放在最后一行的末尾
+arrowParens: "always" # 箭头函数参数始终使用括号包裹

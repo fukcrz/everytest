@@ -1,0 +1,18 @@
+{
+    "name": "@layer/base",
+    "main": "./nuxt.config.ts",
+    "type": "module",
+    "scripts": {
+        "postinstall": "nuxt prepare"
+    },
+    "dependencies": {
+        "@nuxt/ui": "^3.2.0",
+        "drizzle-orm": "^0.44.3",
+        "motion-v": "^1.5.0",
+        "nanoid": "^5.1.5",
+        "pathe": "^2.0.3",
+        "postgres": "^3.4.7",
+        "ufo": "^1.6.1",
+        "zod": "^4.0.5"
+    }
+}

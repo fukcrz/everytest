@@ -1,0 +1,21 @@
+{
+    "name": "nuxt-template",
+    "private": true,
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "dev": "pnpm -F app dev",
+        "pi": "pnpm -F * postinstall",
+        "format": "pnpm prettier . -w"
+    },
+    "packageManager": "pnpm@10.13.1",
+    "dependencies": {
+        "nuxt": "^4.0.0",
+        "vue": "^3.5.17",
+        "vue-router": "^4.5.1"
+    },
+    "devDependencies": {
+        "typescript": "^5.8.3",
+        "prettier": "^3.6.2"
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "name": "app",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "nuxt build",
+        "dev": "nuxt dev",
+        "generate": "nuxt generate",
+        "preview": "nuxt preview",
+        "postinstall": "nuxt prepare"
+    },
+    "dependencies": {
+        "@layer/base": "workspace:^",
+        "drizzle-kit": "^0.31.4"
+    }
+}
