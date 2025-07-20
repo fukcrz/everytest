@@ -57,7 +57,7 @@ export default defineNuxtModule({
                         })
                         .join("\n")
                 } else {
-                    return `export type __placeholder = undefined // 避免ts报错`
+                    return `export const __NO_EXPORT_PLACEHOLDER = undefined // 避免因无导出而导致ts报错或其他问题`
                 }
             },
         })
