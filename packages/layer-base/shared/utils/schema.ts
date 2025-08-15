@@ -28,7 +28,7 @@ export function sortSchema<FS extends [string, ...string[]]>(
         .string()
         .refine(
             (val) =>
-                val.split(",").some((v) => {
+                !val.split(",").some((v) => {
                     if (v.startsWith("asc "))
                         return !fields.includes(v.slice(4))
                     else if (v.startsWith("desc "))
