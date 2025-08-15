@@ -1,7 +1,9 @@
 import { BaseDialog } from "#components"
 import type { BaseDialogProps } from "~/components/BaseDialog.vue"
+import type { RouteLocationRaw } from "vue-router"
 
 export function useFeedback() {
+    const router = useRouter()
     const toast = useToast()
     const overlay = useOverlay()
     const { start: startLoading, finish: finishLoading } = useLoadingIndicator()
@@ -48,6 +50,14 @@ export function useFeedback() {
             .finally(finishLoading)
     }
 
+    function goBack(rollback?: RouteLocationRaw) {
+        if (history.length > 1) {
+            router.back()
+        } else if (rollback) {
+            router.replace(rollback)
+        }
+    }
+
     return {
         toast,
         addToast,
@@ -57,5 +67,6 @@ export function useFeedback() {
         operate,
         startLoading,
         finishLoading,
+        goBack,
     }
 }
