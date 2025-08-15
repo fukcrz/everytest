@@ -12,7 +12,10 @@ const bodySchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-    const { path, filename, size, type } = await readValidatedBody(event, bodySchema.parse)
+    const { path, filename, size, type } = await readValidatedBody(
+        event,
+        bodySchema.parse,
+    )
     const key = buildS3Key(filename, path)
     const putObjectCommand = new PutObjectCommand({
         Bucket: bucket,

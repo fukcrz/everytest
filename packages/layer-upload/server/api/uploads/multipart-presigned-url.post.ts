@@ -14,7 +14,10 @@ const bodySchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-    const { uploadId, key, size, partNumber } = await readValidatedBody(event, bodySchema.parse)
+    const { uploadId, key, size, partNumber } = await readValidatedBody(
+        event,
+        bodySchema.parse,
+    )
     const putObjectCommand = new UploadPartCommand({
         Bucket: bucket,
         Key: key,

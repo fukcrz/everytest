@@ -16,7 +16,10 @@ const bodySchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-    const { key, uploadId, parts } = await readValidatedBody(event, bodySchema.parse)
+    const { key, uploadId, parts } = await readValidatedBody(
+        event,
+        bodySchema.parse,
+    )
     const command = new CompleteMultipartUploadCommand({
         Bucket: bucket,
         Key: key,

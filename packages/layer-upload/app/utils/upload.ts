@@ -24,7 +24,8 @@ export async function serverUpload(
     },
 ) {
     const { serverUploadSize } = useAppConfig().upload
-    if (file.size > serverUploadSize) throw createError("文件大小超出限制, 最大 " + bytes(serverUploadSize))
+    if (file.size > serverUploadSize)
+        throw createError("文件大小超出限制, 最大 " + bytes(serverUploadSize))
 
     if (option?.onProgress) option.onProgress(0)
 
@@ -52,7 +53,8 @@ export async function clientUpload(
     },
 ) {
     const { maxSize } = useAppConfig().upload
-    if (file.size > maxSize) throw createError("文件大小超出限制, 最大 " + bytes(maxSize))
+    if (file.size > maxSize)
+        throw createError("文件大小超出限制, 最大 " + bytes(maxSize))
 
     if (option?.onProgress) option.onProgress(0)
 
@@ -87,20 +89,24 @@ export async function multipartUpload(
     },
 ) {
     const { maxSize } = useAppConfig().upload
-    if (file.size > maxSize) throw createError("文件大小超出限制, 最大 " + bytes(maxSize))
+    if (file.size > maxSize)
+        throw createError("文件大小超出限制, 最大 " + bytes(maxSize))
     const partMaxRetries = option?.partMaxRetries ?? 3
 
     if (option?.onProgress) option.onProgress(0)
 
-    const { uploadId, key, partSize, numParts, url } = await $fetch("/api/uploads/create-multipart", {
-        method: "POST",
-        body: {
-            path: option?.path,
-            filename: file.name,
-            size: file.size,
-            type: file.type,
+    const { uploadId, key, partSize, numParts, url } = await $fetch(
+        "/api/uploads/create-multipart",
+        {
+            method: "POST",
+            body: {
+                path: option?.path,
+                filename: file.name,
+                size: file.size,
+                type: file.type,
+            },
         },
-    })
+    )
 
     if (option?.onProgress) option.onProgress(0.01)
 
@@ -154,16 +160,22 @@ export async function uploadPart(
     },
 ) {
     const { key, uploadId, partSize, partNumber } = params
-    const partData = file.slice((partNumber - 1) * partSize, partNumber * partSize)
-    const { presignedUrl } = await $fetch("/api/uploads/multipart-presigned-url", {
-        method: "POST",
-        body: {
-            uploadId,
-            key,
-            partNumber,
-            size: partData.size,
+    const partData = file.slice(
+        (partNumber - 1) * partSize,
+        partNumber * partSize,
+    )
+    const { presignedUrl } = await $fetch(
+        "/api/uploads/multipart-presigned-url",
+        {
+            method: "POST",
+            body: {
+                uploadId,
+                key,
+                partNumber,
+                size: partData.size,
+            },
         },
-    })
+    )
     const res = await $fetch.raw(presignedUrl, {
         method: "PUT",
         body: partData,

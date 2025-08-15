@@ -14,7 +14,10 @@ const bodySchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-    const { path, filename, size, type } = await readValidatedBody(event, bodySchema.parse)
+    const { path, filename, size, type } = await readValidatedBody(
+        event,
+        bodySchema.parse,
+    )
     const key = buildS3Key(filename, path)
     const numParts = Math.ceil(size / partSize)
     const createMultipartUploadCommand = new CreateMultipartUploadCommand({
@@ -22,7 +25,9 @@ export default defineEventHandler(async (event) => {
         Key: key,
         ContentType: type,
     })
-    const createMultipartUploadResult = await s3Client.send(createMultipartUploadCommand)
+    const createMultipartUploadResult = await s3Client.send(
+        createMultipartUploadCommand,
+    )
     if (!createMultipartUploadResult.UploadId) {
         throw createError("Failed to initiate multipart upload.")
     }

@@ -23,7 +23,9 @@ export default defineEventHandler(async (event) => {
             message: "上传文件大小超出限制",
         })
     const filename = uploadFilenameSchema.parse(file.filename)
-    const path = uploadPathSchema.parse(formData.find((item) => item.name == "path")?.data.toString("utf8"))
+    const path = uploadPathSchema.parse(
+        formData.find((item) => item.name == "path")?.data.toString("utf8"),
+    )
 
     const key = buildS3Key(filename, path)
     const putObjectCommand = new PutObjectCommand({
