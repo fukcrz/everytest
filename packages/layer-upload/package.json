@@ -1,0 +1,17 @@
+{
+    "name": "@layer/upload",
+    "main": "./nuxt.config.ts",
+    "type": "module",
+    "scripts": {
+        "postinstall": "nuxt prepare"
+    },
+    "dependencies": {
+        "@aws-sdk/client-s3": "^3.864.0",
+        "@aws-sdk/lib-storage": "^3.864.0",
+        "@aws-sdk/s3-request-presigner": "^3.864.0",
+        "@layer/base": "workspace:^",
+        "nuxt": "^4.0.3",
+        "vue": "^3.5.18",
+        "vue-router": "^4.5.1"
+    }
+}
