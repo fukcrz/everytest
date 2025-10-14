@@ -16,7 +16,7 @@
             <slot></slot>
         </main>
 
-        <footer class="mt-auto text-center py-4">
+        <footer class="mt-auto text-center p-4">
             <p class="text-gray-500 dark:text-gray-400 text-sm">
                 免责声明：本测试由 AI
                 生成，结果仅供娱乐和参考，不构成任何专业建议。

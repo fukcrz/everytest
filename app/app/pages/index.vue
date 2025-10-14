@@ -12,7 +12,7 @@
                             Every Test
                         </h1>
                         <p
-                            class="text-gray-600 dark:text-gray-300 mt-3 text-lg"
+                            class="text-gray-600 dark:text-gray-300 mt-3 md:text-lg"
                         >
                             输入任何主题，让 AI 为你生成专属趣味测试
                         </p>
@@ -29,11 +29,11 @@
                                     v-model="state.topic"
                                     name="topic"
                                     placeholder="例如：测试我的MBTI人格倾向"
-                                    class="w-full px-5 py-4 text-lg bg-gray-100 dark:bg-slate-700 border-2 border-transparent rounded-full focus:outline-none focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 focus:border-purple-500 dark:focus:border-purple-500 transition-all duration-300 placeholder-gray-400 dark:placeholder-gray-500"
+                                    class="w-full px-3 md:px-5 py-2 md:py-4 text-xs md:text-base lg:text-lg bg-gray-100 dark:bg-slate-700 border-2 border-transparent rounded-full focus:outline-none focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 focus:border-purple-500 dark:focus:border-purple-500 transition-all duration-300 placeholder-gray-400 dark:placeholder-gray-500"
                                 />
                                 <button
                                     type="submit"
-                                    class="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-6 py-2.5 rounded-full hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transform hover:scale-105 transition-all duration-300"
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-4 md:px-6 py-1.5 md:py-2.5 text-xs md:text-base rounded-full hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transform hover:scale-105 transition-all duration-300"
                                 >
                                     生成测试
                                 </button>
@@ -79,7 +79,7 @@
                                     class="flex items-center space-x-3 p-3 rounded-md hover:bg-gray-200/50 dark:hover:bg-slate-600/50 cursor-pointer transition-colors duration-200"
                                 >
                                     <div
-                                        class="custom-radio"
+                                        class="shrink-0 custom-radio"
                                         :class="{
                                             checked: option == item.selection,
                                         }"
@@ -106,13 +106,13 @@
 
                 <div v-if="state == 'result'">
                     <h2
-                        class="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-900 dark:text-white"
+                        class="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-900 dark:text-white b-b"
                     >
                         你的专属评测报告
                     </h2>
 
                     <div
-                        class="prose prose-lg dark:prose-invert max-w-none bg-white/50 dark:bg-slate-700/50 p-6 rounded-lg"
+                        class="prose lg:prose-lg dark:prose-invert max-w-none"
                         v-html="
                             result
                                 ? parseMarkdown(result)
@@ -120,7 +120,7 @@
                         "
                     ></div>
 
-                    <div class="text-center mt-8">
+                    <div v-if="showRetryButton" class="text-center mt-8">
                         <button
                             @click="state = 'init'"
                             class="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-8 py-3 rounded-full hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transform hover:scale-105 transition-all duration-300"
@@ -140,6 +140,7 @@
     const { dialog } = useFeedback()
     const state = ref("init" as "init" | "loading" | "answer" | "result")
     const result = ref("")
+    const showRetryButton = ref(false)
     const test = ref(
         {} as {
             topic: string
@@ -180,6 +181,7 @@
 
     async function evaluating() {
         result.value = ""
+        showRetryButton.value = false
         state.value = "result"
 
         const res = (await $fetch("/api/test/evaluating", {
@@ -199,6 +201,8 @@
             const v = decoder.decode(value, { stream: true })
             result.value += v
         }
+
+        showRetryButton.value = true
     }
 </script>
 
