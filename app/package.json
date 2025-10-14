@@ -10,9 +10,14 @@
         "postinstall": "nuxt prepare"
     },
     "dependencies": {
+        "@ai-sdk/google": "^2.0.23",
         "@layer/base": "workspace:^",
+        "@tailwindcss/typography": "^0.5.16",
+        "ai": "^5.0.70",
         "drizzle-kit": "^0.31.4",
+        "marked": "^16.4.0",
         "nuxt": "^4.0.3",
+        "ogl": "^1.0.11",
         "vue": "^3.5.18",
         "vue-router": "^4.5.1"
     },
