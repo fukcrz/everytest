@@ -5,12 +5,17 @@ export default defineNuxtConfig({
     ssr: false,
     css: ["~/assets/css/tailwind.css"],
     extends: [["@layer/base", { meta: { name: "base" } }]],
+    nitro: {
+        rollupConfig: {
+            external: ["cloudflare:sockets"],
+        },
+    },
     runtimeConfig: {
-        geminiApiKey: "AIzaSyDEWdszbxBvkmR1voNngRXk7Wbf3iERTYA",
+        geminiApiKey: "",
     },
     app: {
         head: {
-            title:"Every Test"
-        }
-    }
+            title: "Every Test",
+        },
+    },
 })
