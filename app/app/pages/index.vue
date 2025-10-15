@@ -120,13 +120,33 @@
                         "
                     ></div>
 
-                    <div v-if="showRetryButton" class="text-center mt-8">
+                    <div
+                        v-if="showRetryButton"
+                        class="flex justify-around text-center mt-8"
+                    >
                         <button
-                            @click="state = 'init'"
+                            v-if="shared"
+                            @click="sharedTest"
                             class="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-8 py-3 rounded-full hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transform hover:scale-105 transition-all duration-300"
                         >
-                            再试一次
+                            测试题目
                         </button>
+
+                        <template v-else>
+                            <button
+                                @click="shareResult"
+                                class="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-8 py-3 rounded-full hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transform hover:scale-105 transition-all duration-300"
+                            >
+                                分享
+                            </button>
+
+                            <button
+                                @click="state = 'init'"
+                                class="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-8 py-3 rounded-full hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transform hover:scale-105 transition-all duration-300"
+                            >
+                                再试一次
+                            </button>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -137,9 +157,13 @@
 <script setup lang="ts">
     import { parse as parseMarkdown } from "marked"
 
-    const { dialog } = useFeedback()
+    const route = useRoute()
+    const id = route.query.id as string | undefined
+    const { dialog, operate } = useFeedback()
+
     const state = ref("init" as "init" | "loading" | "answer" | "result")
     const result = ref("")
+    const shared = ref(false)
     const showRetryButton = ref(false)
     const test = ref(
         {} as {
@@ -153,6 +177,27 @@
         },
     )
 
+    if (typeof id == "string") {
+        await $fetch(`/api/result/${id}`)
+            .then((res: any) => {
+                result.value = res.result
+                test.value = {
+                    topic: res.topic,
+                    title: res.title,
+                    questions: res.questions,
+                }
+                shared.value = true
+                showRetryButton.value = true
+                state.value = "result"
+            })
+            .catch(() => {
+                dialog({
+                    title: "无效的分享链接",
+                    message: "请检查链接是否正确，或重新生成分享链接。",
+                })
+            })
+    }
+
     const formSchema = z.object({
         topic: z
             .string("请输入主题")
@@ -162,10 +207,13 @@
 
     async function generateTest(data: ZodOutput<typeof formSchema>) {
         state.value = "loading"
-        const res = await $fetch("/api/test/generate", {
-            method: "POST",
-            body: { topic: data.topic },
-        })
+        const res = await operate(
+            // @ts-ignore
+            $fetch("/api/test/generate", {
+                method: "POST",
+                body: { topic: data.topic },
+            }),
+        )
         if (res.error) {
             state.value = "init"
             dialog({ title: "生成失败", message: res.error })
@@ -184,11 +232,13 @@
         showRetryButton.value = false
         state.value = "result"
 
-        const res = (await $fetch("/api/test/evaluating", {
-            method: "POST",
-            body: test.value,
-            responseType: "stream",
-        })) as unknown as ReadableStream
+        const res = (await operate(
+            $fetch("/api/test/evaluating", {
+                method: "POST",
+                body: test.value,
+                responseType: "stream",
+            }),
+        )) as unknown as ReadableStream
 
         const reader = res.getReader()
         const decoder = new TextDecoder()
@@ -203,6 +253,42 @@
         }
 
         showRetryButton.value = true
+    }
+
+    async function shareResult() {
+        const { id } = await operate(
+            $fetch("/api/result/share", {
+                method: "POST",
+                body: {
+                    topic: test.value.topic,
+                    title: test.value.title,
+                    result: result.value,
+                    questions: test.value.questions,
+                },
+            }),
+        )
+
+        await navigator.clipboard
+            .writeText(`${window.location.origin}?id=${id}`)
+            .then(() => {
+                dialog({
+                    title: "分享链接已复制到剪贴板",
+                    message: "你可以将链接发送给朋友，让他们查看你的测试结果。",
+                })
+            })
+            .catch(() => {
+                dialog({
+                    title: "复制失败",
+                    message:
+                        "请手动复制链接：" +
+                        `${window.location.origin}?id=${id}`,
+                })
+            })
+    }
+
+    function sharedTest() {
+        shared.value = false
+        state.value = "answer"
     }
 </script>
 
