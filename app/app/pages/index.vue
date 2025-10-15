@@ -289,6 +289,11 @@
     function sharedTest() {
         shared.value = false
         state.value = "answer"
+        nextTick(() => {
+            document
+                .getElementById("__nuxt")
+                ?.scrollTo({ top: 0, behavior: "smooth" })
+        })
     }
 </script>
 
